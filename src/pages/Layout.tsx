@@ -1,9 +1,12 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { createContext, useState } from "react";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 import { News } from "./RootPage";
+import { TComment } from "../components/Comments";
+import { newCommentDataType } from "./DetailsPage";
 
+//типы для context'ов
 type HeaderContextType = {
   searchText: string;
   setSearchText: (input: string) => void;
@@ -16,6 +19,16 @@ type TNewsContext = {
   setNews: (news: News[]) => void;
 };
 
+type AddCommentContextType = {
+  newComments: TComment[];
+  setNewComments: Dispatch<SetStateAction<TComment[]>>;
+  adding: newCommentDataType;
+  setAdding: Dispatch<SetStateAction<newCommentDataType>>;
+  comments: TComment[];
+  setComments: Dispatch<SetStateAction<TComment[]>>;
+};
+
+//context'ы
 export const HeaderContext = createContext<HeaderContextType>({
   //preparing "searchText" and "setSearchText" for teleporting
   searchText: "",
@@ -29,10 +42,30 @@ export const NewsContext = createContext<TNewsContext>({
   setNews: () => {},
 });
 
+//context для добавления комментариев
+let newCommentData = {
+  isButtonClicked: false,
+  inputUserId: 0,
+  inputContent: "",
+};
+
+export const AddCommentContext = createContext<AddCommentContextType>({
+  newComments: [],
+  setNewComments: () => {},
+  adding: newCommentData,
+  setAdding: () => {},
+  comments: [],
+  setComments: () => {},
+});
+
 export const Layout = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [news, setNews] = useState<News[]>([]);
   const [initialNews, setInitialNews] = useState<News[]>([]);
+
+  const [comments, setComments] = useState<TComment[]>([]);
+  const [adding, setAdding] = useState<newCommentDataType>(newCommentData);
+  const [newComments, setNewComments] = useState<TComment[]>([]);
 
   return (
     <HeaderContext.Provider value={{ searchText, setSearchText }}>
@@ -40,7 +73,11 @@ export const Layout = () => {
         value={{ initialNews, setInitialNews, news, setNews }}
       >
         <Navbar />
-        <Outlet />
+        <AddCommentContext.Provider
+          value={{ newComments, setNewComments, adding, setAdding , comments, setComments}}
+        >
+          <Outlet />
+        </AddCommentContext.Provider>
       </NewsContext.Provider>
       <Footer />
     </HeaderContext.Provider>

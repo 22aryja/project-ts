@@ -1,14 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { News } from "./RootPage";
 import { useParams } from "react-router-dom";
 import { ApiService } from "../services/ApiService";
 import DetailsCard from "../components/DetailsCard";
 import EditNewsForm from "../forms/EditNewsForm";
 import Comments from "../components/Comments";
+import { useTranslation } from "react-i18next";
+import { AddCommentContext } from "./Layout";
+import AddCommentForm from "../forms/AddCommentForm";
+
+export type newCommentDataType = {
+  isButtonClicked: boolean;
+  inputUserId: number;
+  inputContent: string;
+};
 
 export default function DetailsPage() {
   const [article, setArticle] = useState<News>();
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadArticle();
@@ -37,6 +47,8 @@ export default function DetailsPage() {
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [content, setContent] = useState<string>("");
+  const { newComments, setNewComments, adding, setAdding } =
+    useContext(AddCommentContext);
 
   const handleEditClick = () => {
     setIsEditing(!isEditing);
@@ -53,8 +65,8 @@ export default function DetailsPage() {
 
   return (
     <div className="details-page">
-      <button className="nav-button" onClick={toggleEditing}>
-        {isEditing ? "Close" : "Edit"}
+      <button className="nav-button details-editBtn" onClick={toggleEditing}>
+        {isEditing ? t("close") : t("edit")}
       </button>
       {!article && <div>Loading...</div>}
       {article && !isEditing && (
@@ -66,9 +78,31 @@ export default function DetailsPage() {
       {article && isEditing && (
         <EditNewsForm news={article} onClose={toggleEditing} />
       )}
+      <div className="Cancel">
+        {adding.isButtonClicked && (
+          <div>
+            <AddCommentForm />
+            {/* <button onClick={handleSendClick}>Send</button> */}
+          </div>
+        )}
+
+        <button
+        style={{marginTop: "10px"}}
+          className="nav-button"
+          onClick={() =>
+            setAdding((prevState: newCommentDataType) => ({
+              ...prevState,
+              isButtonClicked: !prevState.isButtonClicked,
+            }))
+          }
+        >
+          {adding.isButtonClicked ? t("cancel") : t("add_comment")}
+        </button>
+      </div>
+
       {article && (
         <section>
-          <Comments />
+          <Comments newComments={newComments} />
         </section>
       )}
     </div>

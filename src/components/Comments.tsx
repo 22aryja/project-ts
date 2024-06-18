@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { ApiService } from "../services/ApiService";
 import { useParams } from "react-router-dom";
 import { Comment } from "./Comment";
+import { AddCommentContext } from "../pages/Layout";
 
 export type TComment = {
   id: number;
@@ -10,13 +11,24 @@ export type TComment = {
   comment: string;
 };
 
-export default function Comments() {
-  const [comments, setComments] = useState<TComment[]>();
+export type TNewComment = {
+  postId: number;
+  userId: number;
+  comment: string;
+};
+
+type CommentsProps = {
+  newComments?: TComment[];
+};
+
+export default function Comments({ newComments = [] }: CommentsProps) {
+  const { comments, setComments } = useContext(AddCommentContext);
   const { id } = useParams();
 
+  //для отображения комментов, у которых postId === id страницы
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [id]);
 
   const fetchComments = () => {
     ApiService.getComments().then((res) => {
@@ -28,9 +40,22 @@ export default function Comments() {
     });
   };
 
-  function onDelete(id: number) {
-    setComments(comments?.filter((comment) => comment.id !== id));
+  // для удаления коммента через API
+  function onDelete(id: number): void {
+    ApiService.deleteComment(id);
+    if (comments) {
+      setComments((comments) =>
+        comments.filter((comment: TComment) => comment.id !== id)
+      );
+    }
   }
+
+  // для обработки новых комментов
+  useEffect(() => {
+    if (newComments.length > 0) {
+      setComments((prevComments) => [...(prevComments || []), ...newComments]);
+    }
+  }, [newComments]);
 
   return (
     <div>

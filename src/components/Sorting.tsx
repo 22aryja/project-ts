@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { NewsContext } from "../pages/Layout";
+import { useTranslation } from "react-i18next";
 
 function countTime(time: string): number {
   const day: number = 10 * Number(time[0]) + Number(time[1]);
@@ -9,6 +10,7 @@ function countTime(time: string): number {
 }
 
 export function Sorting() {
+  const { t } = useTranslation();
   const { initialNews, news, setNews } = useContext(NewsContext);
   // const initalNews: News[] = news;
 
@@ -31,7 +33,7 @@ export function Sorting() {
   return (
     //onSelect оказ не робит
     <select className="nav-select" onChange={sortNewsByDate}>
-      <option value="default">Сортировать по:</option>
+      <option value="default">{t("sort_by")}</option>
       <option value="updatedAt">updatedAt</option>
       <option value="publishedAt">publishedAt</option>
     </select>

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import trashIcon from "../assets/icons8-trash.svg";
 import { TComment } from "./Comments";
 
