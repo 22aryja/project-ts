@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { NewsContext } from "../pages/Layout";
 import { useTranslation } from "react-i18next";
 
-function countTime(time: string): number {
+export function countTime(time: string): number {
   const day: number = 10 * Number(time[0]) + Number(time[1]);
   const month: number = (10 * Number(time[3]) + Number(time[4])) * 30;
   const year: number = Number(time[6] + time[7] + time[8] + time[9]) * 365;

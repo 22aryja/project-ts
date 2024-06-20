@@ -6,7 +6,7 @@ import { News } from "./RootPage";
 import { TComment } from "../components/Comments";
 import { newCommentDataType } from "./DetailsPage";
 
-//типы для context'ов
+//типы для context'ов -------------------
 type HeaderContextType = {
   searchText: string;
   setSearchText: (input: string) => void;
@@ -28,7 +28,7 @@ type AddCommentContextType = {
   setComments: Dispatch<SetStateAction<TComment[]>>;
 };
 
-//context'ы
+//context'ы ---------------------------
 export const HeaderContext = createContext<HeaderContextType>({
   //preparing "searchText" and "setSearchText" for teleporting
   searchText: "",
@@ -59,10 +59,12 @@ export const AddCommentContext = createContext<AddCommentContextType>({
 });
 
 export const Layout = () => {
+  //для поиска по тексту
   const [searchText, setSearchText] = useState<string>("");
   const [news, setNews] = useState<News[]>([]);
   const [initialNews, setInitialNews] = useState<News[]>([]);
 
+  //для добавления/удаления комментов
   const [comments, setComments] = useState<TComment[]>([]);
   const [adding, setAdding] = useState<newCommentDataType>(newCommentData);
   const [newComments, setNewComments] = useState<TComment[]>([]);
@@ -74,7 +76,14 @@ export const Layout = () => {
       >
         <Navbar />
         <AddCommentContext.Provider
-          value={{ newComments, setNewComments, adding, setAdding , comments, setComments}}
+          value={{
+            newComments,
+            setNewComments,
+            adding,
+            setAdding,
+            comments,
+            setComments,
+          }}
         >
           <Outlet />
         </AddCommentContext.Provider>

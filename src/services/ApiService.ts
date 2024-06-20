@@ -24,6 +24,27 @@ export const ApiService = {
       throw e;
     }
   },
+  deleteArticle: async (articleId: Number): Promise<News> => {
+    try {
+      const response = await fetch(BASE_URL + `/posts/${articleId}`, {
+        method: "DELETE",
+      });
+      return response.json();
+    } catch (e) {
+      throw e;
+    }
+  },
+  addArticle: async (article: News): Promise<News> => {
+    try {
+      const response = await fetch(BASE_URL + "/posts/", {
+        method: "POST",
+        body: JSON.stringify(article),
+      });
+      return response.json();
+    } catch (e) {
+      throw e;
+    }
+  },
   getComments: async (): Promise<TComment[]> => {
     try {
       const response = await fetch(BASE_URL + "/comments", {
@@ -45,12 +66,23 @@ export const ApiService = {
       throw e;
     }
   },
+  editComment: async (comment: TComment): Promise<TComment> => {
+    try {
+      const response = await fetch(BASE_URL + `/comments/${comment.id}`, {
+        method: "PUT",
+        body: JSON.stringify(comment),
+      });
+      return response.json();
+    } catch (e) {
+      throw e;
+    }
+  },
   deleteComment: async (commentId: number): Promise<TComment> => {
     try {
       const response = await fetch(BASE_URL + `/comments/${commentId}`, {
         method: "DELETE",
       });
-      return response.json();
+      return await response.json();
     } catch (e) {
       throw e;
     }

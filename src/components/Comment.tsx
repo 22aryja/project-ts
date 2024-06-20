@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import trashIcon from "../assets/icons8-trash.svg";
 import { TComment } from "./Comments";
+import EditCommentForm from "../forms/EditCommentForm";
 
 type CommentProps = {
   comment: TComment;
@@ -8,16 +9,31 @@ type CommentProps = {
 };
 
 export const Comment = ({ comment, onDelete }: CommentProps) => {
+  const [isEditClicked, setIsEditClicked] = useState<boolean>(false);
+
   return (
     <div className="comment">
+      <div className="comment-edit">
+        <button onClick={() => setIsEditClicked(!isEditClicked)}>
+          {isEditClicked ? "Close" : "Edit"}
+        </button>
+      </div>
       <div className="comment-data">
         <p>ID: {comment.id}</p>
         <p>PostID: {comment.postId}</p>
         <p>UserID: {comment.userId}</p>
       </div>
-      <div className="comment-content">
-        <p>{comment.comment}</p>
-      </div>
+      {isEditClicked ? (
+        <EditCommentForm
+          commentData={comment}
+          onClose={() => setIsEditClicked(false)}
+        />
+      ) : (
+        <div className="comment-content">
+          <p>{comment.comment}</p>
+        </div>
+      )}
+
       <button className="delete-button" onClick={() => onDelete(comment.id)}>
         <img className="trash" src={trashIcon}></img>
       </button>
