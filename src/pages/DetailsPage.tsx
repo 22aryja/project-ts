@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { ApiService } from "../services/ApiService";
 import DetailsCard from "../components/DetailsCard";
 import EditNewsForm from "../forms/EditNewsForm";
-import Comments from "../components/Comments";
+import Comments from "../components/Comment/Comments";
 import { useTranslation } from "react-i18next";
 import { AddCommentContext } from "./Layout";
 import AddCommentForm from "../forms/AddCommentForm";
@@ -87,7 +87,7 @@ export default function DetailsPage() {
         )}
 
         <button
-        style={{marginTop: "10px"}}
+          style={{ marginTop: "10px" }}
           className="nav-button"
           onClick={() =>
             setAdding((prevState: newCommentDataType) => ({

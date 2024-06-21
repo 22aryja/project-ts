@@ -68,6 +68,7 @@ export default function Datepicker({ dates, setDates }: DatepickerProps) {
   return (
     <div className="calendarWrap">
       <input
+        className="date-picker-input"
         value={`${format(range[0].startDate, "yyyy/MM/dd")} to ${format(
           range[0].endDate,
           "yyyy/MM/dd"

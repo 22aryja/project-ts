@@ -1,5 +1,6 @@
-import { News } from "../pages/RootPage";
-import { TextUtils } from "./../utils/textUtils";
+import "./newsCard.scss";
+import { News } from "../../pages/RootPage";
+import { TextUtils } from "../../utils/textUtils";
 
 type NewsCardProps = {
   news: News;

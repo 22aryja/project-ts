@@ -1,9 +1,9 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../components/Navbar/Navbar";
+import Footer from "../components/Footer/Footer";
 import { Dispatch, SetStateAction, createContext, useState } from "react";
 import { News } from "./RootPage";
-import { TComment } from "../components/Comments";
+import { TComment } from "../components/Comment/Comments";
 import { newCommentDataType } from "./DetailsPage";
 
 //типы для context'ов -------------------

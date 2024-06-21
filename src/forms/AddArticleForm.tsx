@@ -21,7 +21,7 @@ const emptyArticle: News = {
   userId: 0,
 };
 
-export default function AddArticleFrom({ onClose }: any) {
+export default function AddArticleForm({ onClose }: any) {
   const { news, setNews } = useContext(NewsContext);
   const [newArticle, setNewArticle] = useState<News>(emptyArticle);
 

@@ -1,0 +1,67 @@
+.delete-article {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  &-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    text-align: center;
+    color: #ff5353;
+    background-color: #333;
+    border: 0 solid transparent;
+    &:active {
+      color: #ffffff;
+      background-color: #ff5353;
+    }
+  }
+}
+
+.card {
+  display: flex;
+  // flex-wrap: wrap;
+  flex-direction: column;
+  background-color: transparent;
+  color: #ffffff;
+  max-width: 300px;
+  width: 100%;
+  padding: 20px;
+  box-shadow: 0 4px 8px #0000005f;
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
+
+  &-bottom,
+  &-top {
+    flex: 1 0 50%;
+    white-space: normal;
+  }
+  &-top {
+    object-fit: fill;
+    justify-content: center;
+    text-align: center;
+    &-image-wrapper {
+      // max-height: 250px;
+      width: 100%;
+      height: 100%;
+    }
+    &-image {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &-bottom {
+    justify-content: center;
+    text-align: center;
+    &-title {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  }
+  &:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+}

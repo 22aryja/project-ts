@@ -1,7 +1,8 @@
+import "./comment.scss"
 import { useState } from "react";
-import trashIcon from "../assets/icons8-trash.svg";
+import trashIcon from "../../assets/icons8-trash.svg";
 import { TComment } from "./Comments";
-import EditCommentForm from "../forms/EditCommentForm";
+import EditCommentForm from "../../forms/EditCommentForm";
 
 type CommentProps = {
   comment: TComment;

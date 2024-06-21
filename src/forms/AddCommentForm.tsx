@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { AddCommentContext } from "../pages/Layout";
 import { newCommentDataType } from "../pages/DetailsPage";
 import { ApiService } from "../services/ApiService";
-import { TComment } from "../components/Comments";
+import { TComment } from "../components/Comment/Comments";
 import { useTranslation } from "react-i18next";
 
 export default function AddCommentForm() {

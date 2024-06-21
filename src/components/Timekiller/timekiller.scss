@@ -1,0 +1,16 @@
+.block {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1% 0 0 0;
+}
+
+.zone {
+  height: 100%;
+  width: 90%;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  box-shadow: 0 0 10px black;
+}

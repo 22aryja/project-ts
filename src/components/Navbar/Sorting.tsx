@@ -1,5 +1,6 @@
+import "./navbar.scss";
 import { useContext } from "react";
-import { NewsContext } from "../pages/Layout";
+import { NewsContext } from "../../pages/Layout";
 import { useTranslation } from "react-i18next";
 
 export function countTime(time: string): number {

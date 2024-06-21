@@ -1,3 +1,4 @@
+import "./footer.scss";
 import { Link } from "react-router-dom";
 
 export default function Footer() {
@@ -17,7 +18,11 @@ export default function Footer() {
         </li>
         <li>About</li>
         <li>Services</li>
-        <li>Team</li>
+        <li>
+          <Link className="link" to={"/timekiller"}>
+            Timekiller
+          </Link>
+        </li>
         <li>Contact</li>
       </ul>
       <p>@2024 Footer | All Rights Reserved</p>

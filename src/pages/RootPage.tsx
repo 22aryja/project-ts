@@ -1,11 +1,12 @@
 import { useEffect, useContext, useState } from "react";
-import NewsCard from "../components/NewsCard";
+import NewsCard from "../components/NewsCard/NewsCard";
 import "../App.scss";
 import { Link } from "react-router-dom";
 import { HeaderContext, NewsContext } from "./Layout";
 import { ApiService } from "../services/ApiService";
+import EmptyData from "../components/EmptyData/EmptyData";
 import Modal from "../components/modal/Modal";
-import AddArticleFrom from "../forms/AddArticleForm";
+import AddArticleForm from "../forms/AddArticleForm";
 import { DateUtils } from "./../utils/dateTime";
 import Datepicker from "../components/Datepicker/Datepicker";
 
@@ -123,13 +124,17 @@ export const RootPage = () => {
           /> */}
         </div>
       </div>
-      <div className="container">
-        {news.map((newsItem: any) => (
-          <Link key={newsItem.id} to={`/details/${newsItem.id}`}>
-            <NewsCard news={newsItem} onDelete={() => deleteNews(newsItem)} />
-          </Link>
-        ))}
-      </div>
+      {news.length === 0 ? (
+        <EmptyData />
+      ) : (
+        <div className="container">
+          {news.map((newsItem: any) => (
+            <Link key={newsItem.id} to={`/details/${newsItem.id}`}>
+              <NewsCard news={newsItem} onDelete={() => deleteNews(newsItem)} />
+            </Link>
+          ))}
+        </div>
+      )}
       {addArticleFormVisible && (
         <Modal
           visible={addArticleFormVisible}
@@ -139,7 +144,7 @@ export const RootPage = () => {
           }
           body={
             <div className="article-wrapper">
-              <AddArticleFrom onClose={() => setAddArticleFormVisible(false)} />
+              <AddArticleForm onClose={() => setAddArticleFormVisible(false)} />
             </div>
           }
         />

@@ -1,8 +1,9 @@
+import "./comment.scss";
 import { useEffect, useContext } from "react";
-import { ApiService } from "../services/ApiService";
+import { ApiService } from "../../services/ApiService";
 import { useParams } from "react-router-dom";
 import { Comment } from "./Comment";
-import { AddCommentContext } from "../pages/Layout";
+import { AddCommentContext } from "../../pages/Layout";
 
 export type TComment = {
   id: number;

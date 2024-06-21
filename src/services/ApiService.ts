@@ -1,5 +1,5 @@
 import { News } from "../pages/RootPage";
-import { TComment } from "../components/Comments";
+import { TComment } from "../components/Comment/Comments";
 
 const BASE_URL = "https://jsonplaceholder.org";
 
