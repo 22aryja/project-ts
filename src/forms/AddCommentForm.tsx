@@ -2,39 +2,42 @@ import { useContext, useState } from "react";
 import { AddCommentContext } from "../pages/Layout";
 import { newCommentDataType } from "../pages/DetailsPage";
 import { ApiService } from "../services/ApiService";
-import { TComment } from "../components/Comment/Comments";
+import { TNewComment } from "../components/Comment/Comments";
 import { useTranslation } from "react-i18next";
 
-export default function AddCommentForm() {
+type AddCommentFormProps = {
+  id: string;
+};
+
+export default function AddCommentForm({ id }: AddCommentFormProps) {
   const { t } = useTranslation();
   const { adding, setAdding } = useContext(AddCommentContext);
   const { comments, setComments } = useContext(AddCommentContext);
-  const newComment: TComment = {
-    id: 0,
-    postId: 0,
-    userId: 0,
-    comment: "",
+  const newComment: TNewComment = {
+    post_id: parseInt(id),
+    user_id: 1,
+    text: "",
   };
-  const [commentState, setCommentState] = useState<TComment>(newComment);
+  const [commentState, setCommentState] = useState<TNewComment>(newComment);
 
   const handleSubmit = async (event: React.FormEvent) => {
     //gpt
     event.preventDefault(); //gpt
 
-    let { id, postId, userId, comment } = commentState;
+    let { post_id, user_id, text } = commentState;
     try {
       comments.map(
         (item) => (
-          (id = comments.length > 0 ? comments[comments.length - 1].id + 1 : 1), //gpt
-          (postId = item.postId),
-          (userId = adding.inputUserId),
-          (comment = adding.inputContent),
-          setCommentState({ id, postId, userId, comment })
+          // (id = comments.length > 0 ? comments[comments.length - 1].id + 1 : 1), //gpt
+          (post_id = item.post_id),
+          (user_id = adding.inputUserId),
+          (text = adding.inputContent),// было text = adding.inputContent
+          setCommentState({ post_id, user_id, text })
         )
       );
-      const newComment = { id, postId, userId, comment };
+      const newComment = { post_id, user_id, text };
 
-      const addedComment = await ApiService.addComment(newComment);
+      const addedComment = await ApiService.addComment(newComment, id);
 
       setComments((prevComments) => [...prevComments, addedComment]);
 

@@ -4,8 +4,9 @@ import { AuthService } from "../../services/AuthService";
 import Input from "../../components/Input/Input";
 
 export type RegisterType = {
-  name: string;
-  surname: string;
+  first_name: string;
+  last_name: string;
+  gender: string;
   email: string;
   password: string;
   confirmPassword?: string;
@@ -16,8 +17,9 @@ type RegisterFormProps = {
 };
 
 const emptyUser = {
-  name: "",
-  surname: "",
+  first_name: "",
+  last_name: "",
+  gender: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -41,12 +43,12 @@ export default function RegisterForm({ onClose }: RegisterFormProps) {
       <form className="register-form" onSubmit={handleSubmit}>
         <div>
           <Input
-            value={userData.name}
-            label="Your name"
+            value={userData.first_name}
+            label="First name"
             onChange={(value) =>
               setUserData((prevData: RegisterType) => ({
                 ...prevData,
-                name: value,
+                first_name: value,
               }))
             }
             type="text"
@@ -66,12 +68,26 @@ export default function RegisterForm({ onClose }: RegisterFormProps) {
 
         <div>
           <Input
-            value={userData.surname}
-            label="Your surname"
+            value={userData.last_name}
+            label="Last name"
             onChange={(value) =>
               setUserData((prevData: RegisterType) => ({
                 ...prevData,
-                surname: value,
+                last_name: value,
+              }))
+            }
+            type="text"
+          />
+        </div>
+
+        <div>
+          <Input
+            value={userData.gender}
+            label="Your gender"
+            onChange={(value) =>
+              setUserData((prevData: RegisterType) => ({
+                ...prevData,
+                gender: value,
               }))
             }
             type="text"
@@ -105,21 +121,24 @@ export default function RegisterForm({ onClose }: RegisterFormProps) {
             type="password"
           />
         </div>
-
-        <div>
-          <Input
-            value={userData.confirmPassword!}
-            label="Confirm password"
-            onChange={(value) =>
-              setUserData((prevData: RegisterType) => ({
-                ...prevData,
-                confirmPassword: value,
-              }))
-            }
-            type="password"
-          />
-        </div>
-
+        {userData.password.length > 6 ? (
+          <div>
+            <Input
+              value={userData.confirmPassword!}
+              label="Confirm password"
+              onChange={(value) =>
+                setUserData((prevData: RegisterType) => ({
+                  ...prevData,
+                  confirmPassword: value,
+                }))
+              }
+              type="password"
+            />
+          </div>
+        ) : (
+          <span style={{"color":"black"}}>Your password should contain 6 symbols at least</span>
+        )}
+        
         {userData.password === userData.confirmPassword ? (
           <button className="register-form-button" type="submit">
             Sign Up

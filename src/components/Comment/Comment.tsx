@@ -21,8 +21,8 @@ export const Comment = ({ comment, onDelete }: CommentProps) => {
       </div>
       <div className="comment-data">
         <p>ID: {comment.id}</p>
-        <p>PostID: {comment.postId}</p>
-        <p>UserID: {comment.userId}</p>
+        <p>PostID: {comment.post_id}</p>
+        <p>UserID: {comment.user_id}</p>
       </div>
       {isEditClicked ? (
         <EditCommentForm
@@ -31,7 +31,7 @@ export const Comment = ({ comment, onDelete }: CommentProps) => {
         />
       ) : (
         <div className="comment-content">
-          <p>{comment.comment}</p>
+          <p>{comment.text}</p>
         </div>
       )}
 

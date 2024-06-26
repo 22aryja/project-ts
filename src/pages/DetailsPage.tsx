@@ -3,11 +3,12 @@ import { News } from "./RootPage";
 import { useParams } from "react-router-dom";
 import { ApiService } from "../services/ApiService";
 import DetailsCard from "../components/DetailsCard";
-import EditNewsForm from "../forms/EditNewsForm";
+import EditNewsForm from "../forms/EditNewsForm/EditNewsForm";
 import Comments from "../components/Comment/Comments";
 import { useTranslation } from "react-i18next";
 import { AddCommentContext } from "./Layout";
 import AddCommentForm from "../forms/AddCommentForm";
+import Modal from "../components/modal/Modal";
 
 export type newCommentDataType = {
   isButtonClicked: boolean;
@@ -17,7 +18,7 @@ export type newCommentDataType = {
 
 export default function DetailsPage() {
   const [article, setArticle] = useState<News>();
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -25,24 +26,27 @@ export default function DetailsPage() {
   }, [id]);
 
   const loadArticle = () => {
-    ApiService.getArticle(id).then((item) => {
-      const data: News = {
-        id: item.id,
-        slug: item.slug,
-        url: item.url,
-        title: item.title,
-        content: item.content,
-        image: item.image,
-        thumbnail: item.thumbnail,
-        status: item.status,
-        category: item.category,
-        publishedAt: item.publishedAt, //было new Date()
-        updatedAt: item.updatedAt, // было new Date()
-        userId: item.userId,
-      };
-      setArticle(data);
-      setContent(data.content);
-    });
+    if (id) {
+      ApiService.getArticle(parseInt(id)).then((item) => {
+        const data: News = {
+          id: item.id,
+          slug: item.slug,
+          url: item.url,
+          title: item.title,
+          content: item.content,
+          image: item.image,
+          thumbnail: item.thumbnail,
+          status: item.status,
+          category: item.category,
+          publishedAt: item.publishedAt, //было new Date()
+          updatedAt: item.updatedAt, // было new Date()
+          created_at: item.created_at,
+          userId: item.userId,
+        };
+        setArticle(data);
+        setContent(data.content);
+      });
+    }
   };
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -76,12 +80,17 @@ export default function DetailsPage() {
       )}
 
       {article && isEditing && (
-        <EditNewsForm news={article} onClose={toggleEditing} />
+        <Modal
+          visible={isEditing}
+          size="large"
+          header={<button onClick={() => setIsEditing(false)}>X</button>}
+          body={<EditNewsForm news={article} onClose={toggleEditing} />}
+        />
       )}
       <div className="Cancel">
-        {adding.isButtonClicked && (
+        {adding.isButtonClicked && id && (
           <div>
-            <AddCommentForm />
+            <AddCommentForm id={id} />
             {/* <button onClick={handleSendClick}>Send</button> */}
           </div>
         )}

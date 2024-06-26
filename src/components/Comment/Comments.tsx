@@ -7,15 +7,16 @@ import { AddCommentContext } from "../../pages/Layout";
 
 export type TComment = {
   id: number;
-  postId: number;
-  userId: number;
-  comment: string;
+  post_id: number;
+  user_id: number;
+  text: string;
+  created_at: string;
 };
 
 export type TNewComment = {
-  postId: number;
-  userId: number;
-  comment: string;
+  post_id: number;
+  user_id: number;
+  text: string;
 };
 
 type CommentsProps = {
@@ -30,15 +31,17 @@ export default function Comments({ newComments = [] }: CommentsProps) {
   useEffect(() => {
     fetchComments();
   }, [id]);
-
+  
   const fetchComments = () => {
-    ApiService.getComments().then((res) => {
+    if(id){
+    ApiService.getComments(id).then((res) => {
       const comments_data = res.filter(
-        (comment) => comment.postId === Number(id)
+        (comment) => comment.post_id === Number(id)
       );
 
       setComments(comments_data);
     });
+  }
   };
 
   // для удаления коммента через API

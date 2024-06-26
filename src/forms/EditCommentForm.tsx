@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TComment } from "../components/Comments";
+import { TComment } from "../components/Comment/Comments";
 import { ApiService } from "../services/ApiService";
 
 type EditCommentFormProps = {
@@ -11,11 +11,11 @@ export default function EditCommentForm({
   commentData,
   onClose,
 }: EditCommentFormProps) {
-  const [comment, setComment] = useState<string>(commentData.comment);
+  const [comment, setComment] = useState<string>(commentData.text);
 
   const handleSubmit = async () => {
     try {
-      commentData.comment = comment;
+      commentData.text = comment;
       ApiService.editComment(commentData);
       onClose();
     } catch (e) {

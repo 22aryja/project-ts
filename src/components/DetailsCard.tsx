@@ -12,13 +12,13 @@ export default function DetailsCard({ article }: DetailsCardProps) {
           <section className="details">
             <img src={article.image} />
             <p className="details-id">ID: {article.id}</p>
-            <p>Slug: {article.slug}</p>
+            {/* <p>Slug: {article.slug}</p> */}
             <p>URL: {article.url}</p>
             <p>Title: {article.title}</p>
 
             <p>{article.content}</p>
-            <p>Status: {article.status}</p>
-            <p>Ctegory: {article.category}</p>
+            <p>Status: {article.status ? article.status : "published"}</p>
+            <p>Category: {article.category ? article.category : "lorem"}</p>
           </section>
         </>
       ) : (

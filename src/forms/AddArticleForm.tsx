@@ -1,45 +1,47 @@
 import { useContext, useState } from "react";
 import { NewsContext } from "../pages/Layout";
-import { News } from "../pages/RootPage";
+// import { News } from "../pages/RootPage";
 import { ApiService } from "../services/ApiService";
 // "https://dummyimage.com/800x430/3822ff/lorem-ipsum.png&text=jsonplaceholder.org" для img
 // "https://dummyimage.com/200x200/3822ff/lorem-ipsum.png&text=jsonplaceholder.org" для thumbnail
-const URL = "https://jsonplaceholder.org/posts/";
+// const URL = "https://jsonplaceholder.org/posts/";
 
-const emptyArticle: News = {
-  id: 0,
-  slug: "",
-  url: URL,
+const colorGenerator = (): string => {
+  const letters = "0123456789ABCDEF";
+  let color = "";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+export type Post = {
+  title: string;
+  content: string;
+  thumbnail: string;
+  user_id: number;
+};
+
+const emptyArticle: Post = {
   title: "",
   content: "",
-  image: "",
   thumbnail: "",
-  status: "",
-  category: "",
-  publishedAt: "",
-  updatedAt: "",
-  userId: 0,
+  user_id: 0,
 };
 
 export default function AddArticleForm({ onClose }: any) {
   const { news, setNews } = useContext(NewsContext);
-  const [newArticle, setNewArticle] = useState<News>(emptyArticle);
+  const [newArticle, setNewArticle] = useState<Post>(emptyArticle);
+  let thumbnailColor: string = colorGenerator();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    const SLUG = newArticle.slug || "default";
     const TITLE = newArticle.title || "untitled";
 
-    const updatedNewArticle: News = {
+    const updatedNewArticle: Post = {
       ...newArticle,
-      id: news.length + 1,
-      url: newArticle.url + newArticle.slug,
-      image: `https://dummyimage.com/800x430/3822ff/${SLUG}.png&text=${TITLE}`,
-      thumbnail: `https://dummyimage.com/200x200/3822ff/${SLUG}.png&text=${TITLE}`,
-      status: "published",
-      publishedAt: `${new Date()}`,
-      updatedAt: `${new Date()}`,
+      thumbnail: `https://dummyimage.com/200x200/${thumbnailColor}/${TITLE}.png&text=${TITLE}`,
     };
     try {
       const addedArticle = await ApiService.addArticle(updatedNewArticle);
@@ -53,68 +55,58 @@ export default function AddArticleForm({ onClose }: any) {
   };
 
   return (
-    <form className="article-form" onSubmit={handleSubmit}>
-      <label>Enter slug: </label>
-      <input
-        type="text"
-        required
-        onChange={(event: any) =>
-          setNewArticle((prevData: News) => ({
-            ...prevData,
-            slug: event.target.value,
-          }))
-        }
-      ></input>
+    <div className="article-wrapper">
+      <form className="article-form" onSubmit={handleSubmit}>
+        <div>
+          <label className="article-label">Enter title: </label>
+          <input
+            className="article-input"
+            type="text"
+            required
+            onChange={(event: any) =>
+              setNewArticle((prevData: Post) => ({
+                ...prevData,
+                title: event.target.value,
+              }))
+            }
+          ></input>
+        </div>
 
-      <label>Enter title: </label>
-      <input
-        type="text"
-        required
-        onChange={(event: any) =>
-          setNewArticle((prevData: News) => ({
-            ...prevData,
-            title: event.target.value,
-          }))
-        }
-      ></input>
+        <div>
+          <label className="article-label">Enter content: </label>
+          <textarea
+            className="article-textarea"
+            required
+            onChange={(event: any) =>
+              setNewArticle((prevData: Post) => ({
+                ...prevData,
+                content: event.target.value,
+              }))
+            }
+            style={{ height: "12rem", width: "75%", fontSize: "1.25rem" }}
+          ></textarea>
+        </div>
 
-      <label>Enter content: </label>
-      <textarea
-        required
-        onChange={(event: any) =>
-          setNewArticle((prevData: News) => ({
-            ...prevData,
-            content: event.target.value,
-          }))
-        }
-      ></textarea>
+        <div>
+          <label className="article-label">Enter UserID: </label>
+          <input
+            className="article-input"
+            type="number"
+            min={1}
+            required
+            onChange={(event: any) =>
+              setNewArticle((prevData: Post) => ({
+                ...prevData,
+                user_id: event.target.value,
+              }))
+            }
+          ></input>
+        </div>
 
-      <label>Enter category:</label>
-      <input
-        type="text"
-        required
-        onChange={(event: any) =>
-          setNewArticle((prevData: News) => ({
-            ...prevData,
-            category: event.target.value,
-          }))
-        }
-      ></input>
-
-      <label>Enter UserID: </label>
-      <input
-        type="number"
-        min={0}
-        required
-        onChange={(event: any) =>
-          setNewArticle((prevData: News) => ({
-            ...prevData,
-            userId: event.target.value,
-          }))
-        }
-      ></input>
-
-      <button type="submit">Create</button>
-    </form>
+        <button className="article-form-button" type="submit">
+          Create
+        </button>
+      </form>
+    </div>
   );
 }

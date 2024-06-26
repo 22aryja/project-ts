@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState } from "react";
 import NewsCard from "../components/NewsCard/NewsCard";
 import "../App.scss";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { HeaderContext, NewsContext } from "./Layout";
 import { ApiService } from "../services/ApiService";
 import EmptyData from "../components/EmptyData/EmptyData";
@@ -9,6 +9,7 @@ import Modal from "../components/modal/Modal";
 import AddArticleForm from "../forms/AddArticleForm";
 import { DateUtils } from "./../utils/dateTime";
 import Datepicker from "../components/Datepicker/Datepicker";
+import Paginator from "../components/Paginator/Paginator";
 
 //npm run dev
 export type News = {
@@ -22,6 +23,7 @@ export type News = {
   status: string;
   category: string;
   publishedAt: string;
+  created_at: string;
   updatedAt: string;
   userId: number;
 };
@@ -36,6 +38,26 @@ const emptyCalendars = {
   right: new Date(),
 };
 
+// для пагинации
+export type Pagination = {
+  currentPage: number;
+};
+
+const emptyActive: Pagination = {
+  currentPage: 1,
+};
+
+// const getNewsForCurrentPage = (
+//   news: News[],
+//   currentPage: number,
+//   itemsPerPage: number
+// ) => {
+//   const startIndex = (currentPage - 1) * itemsPerPage;
+//   const endIndex = startIndex + itemsPerPage;
+//   return news.slice(startIndex, endIndex);
+// };
+//
+
 export const RootPage = () => {
   const { initialNews, setInitialNews, news, setNews } =
     useContext(NewsContext);
@@ -44,6 +66,12 @@ export const RootPage = () => {
     useState<boolean>(false);
 
   const [dates, setDates] = useState<Dates>(emptyCalendars);
+
+  // для пагинации
+  const [active, setActive] = useState<number>(1);
+  const [maxPages, setMaxPages] = useState<number>(0);
+
+  const itemsPerPage = 5; //установлено количество артиклов на страницу
 
   // достает все Article с API
   useEffect(() => {
@@ -68,7 +96,7 @@ export const RootPage = () => {
   useEffect(() => {
     if (dates.left && dates.right) {
       const filteredNews = initialNews.filter((article) => {
-        const articleDate = new Date(DateUtils.splitDate(article.publishedAt));
+        const articleDate = new Date(DateUtils.splitDate(article.created_at));
         return articleDate >= dates.left! && articleDate <= dates.right!;
       });
       setNews(filteredNews);
@@ -77,11 +105,13 @@ export const RootPage = () => {
     }
   }, [dates]);
 
-  const loadNews = () => {
-    ApiService.getAllPosts().then((res) => {
-      setNews(res);
-      setInitialNews(res);
-    });
+  const loadNews = (page?: number) => {
+    if (page)
+      ApiService.getAllPosts(page, itemsPerPage).then((res) => {
+        setNews(res.records);
+        setInitialNews(res.records);
+        setMaxPages(res.pages);
+      });
   };
 
   const deleteNews = (newsItem: News) => {
@@ -91,6 +121,12 @@ export const RootPage = () => {
     );
     setNews(updatedArticles);
   };
+
+  useEffect(() => {
+    loadNews(active);
+  }, [active]);
+
+  // const newsForCurrentPage = getNewsForCurrentPage(news, active, itemsPerPage);
 
   return (
     //в arrow function => {нужно писать return}(НЕ нужно писать return)
@@ -127,13 +163,23 @@ export const RootPage = () => {
       {news.length === 0 ? (
         <EmptyData />
       ) : (
-        <div className="container">
-          {news.map((newsItem: any) => (
-            <Link key={newsItem.id} to={`/details/${newsItem.id}`}>
-              <NewsCard news={newsItem} onDelete={() => deleteNews(newsItem)} />
-            </Link>
-          ))}
-        </div>
+        <>
+          <div className="container">
+            {news.map((newsItem) => (
+              <Link key={newsItem.id} to={`/details/${newsItem.id}`}>
+                <NewsCard
+                  news={newsItem}
+                  onDelete={() => deleteNews(newsItem)}
+                />
+              </Link>
+            ))}
+          </div>
+          <Paginator
+            active={active}
+            setActive={setActive}
+            totalPages={maxPages}
+          />
+        </>
       )}
       {addArticleFormVisible && (
         <Modal
@@ -143,9 +189,7 @@ export const RootPage = () => {
             <button onClick={() => setAddArticleFormVisible(false)}>X</button>
           }
           body={
-            <div className="article-wrapper">
-              <AddArticleForm onClose={() => setAddArticleFormVisible(false)} />
-            </div>
+            <AddArticleForm onClose={() => setAddArticleFormVisible(false)} />
           }
         />
       )}
